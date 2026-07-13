@@ -1,0 +1,4 @@
+learning_rate,final_hit_ratio,steps_to_converge,final_loss,training_wall_clock_seconds
+0.0001,0.9488,50766,0.128183,728.4
+0.001,0.9462,38065,0.088359,830.4
+0.01,0.7585,33260,0.178738,790.0

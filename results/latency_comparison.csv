@@ -1,0 +1,6 @@
+policy,analytical_lat_ms,stochastic_lat_mean_ms,stochastic_lat_std_ms
+LRU,1.8454,2.1118,0.0541
+LFU,1.1743,1.3416,0.0306
+SLRU,1.4879,1.7015,0.0393
+ARC,1.7170,1.9636,0.0466
+DQN,1.0986,1.2515,0.2580

@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+*.egg-info/
+
+# PyTorch models (per-seed, keep only dqn_agent.pth)
+models/dqn_seed_*.pth
+models/sensitivity_lr_*.pth
+
+# Runtime artifacts
+results/checkpoint.json
+results/checkpoint.tmp
+results/robustness_checkpoint.json
+results/robustness_checkpoint.tmp
+results/progress.json
+results/progress.json.tmp
+results/experiment.log
+results/sensitivity.log
+results/heartbeat.txt
+
+# Temp data files
+data/robustness_tmp_*.csv
+data/test_wl.csv
+
+# IDE
+.vscode/
+.idea/
+
+# Cache tools
+.mypy_cache/
+.ruff_cache/

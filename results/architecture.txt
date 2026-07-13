@@ -1,0 +1,10 @@
+fc1.weight: [64, 18] -> 1152 params
+fc1.bias: [64] -> 64 params
+fc2.weight: [64, 64] -> 4096 params
+fc2.bias: [64] -> 64 params
+out.weight: [11, 64] -> 704 params
+out.bias: [11] -> 11 params
+Total: 6091 parameters
+Optimizer: Adam (lr=0.001)
+Loss: SmoothL1Loss (Huber)
+State dim: 18, Action dim: 11
