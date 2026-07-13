@@ -10,6 +10,14 @@ Cloud-hosted Enterprise Resource Planning (ERP) systems running on multi-tenant 
 
 This project introduces a **proactive caching middleware** powered by a Double Deep Q-Network (DDQN). The agent observes an 18-dimensional state vector to predict and prefetch the next necessary entity types before the user requests them, while simultaneously handling cache evictions.
 
+### Experimental Baselines
+The repository implements and benchmarks the following caching policies within the exact same sequence generator:
+1. **LRU** (Least Recently Used)
+2. **LFU** (Least Frequently Used)
+3. **ARC** (Adaptive Replacement Cache)
+4. **SLRU** (Segmented LRU)
+5. **DDQN** (Proposed Proactive Agent)
+
 ### Key Results
 - **93.30%** mean cache hit ratio across 20 random seeds on synthetic TPC-C supply-chain workloads.
 - **40.47% reduction** in mean analytical query latency compared to standard LRU.
@@ -17,9 +25,25 @@ This project introduces a **proactive caching middleware** powered by a Double D
 
 ---
 
+## Citation
+
+If you find this repository or our paper useful in your research, please consider citing our work:
+
+```bibtex
+@inproceedings{tanuwijaya2026proactive,
+  title={Proactive Cache Optimization in Enterprise Systems Through Double Deep Reinforcement Learning},
+  author={Tanuwijaya Tariono, Jason and Hartono, Deliko and Setiawan, Reina},
+  booktitle={2026 International Conference on Information Management and Technology (ICIMTech)},
+  year={2026},
+  organization={IEEE}
+}
+```
+
+---
+
 ## Repository Structure
 
-```
+```text
 ├── data/                  # Transaction access traces and workload configurations
 ├── models/                # Saved DDQN PyTorch model checkpoints (.pt)
 ├── results/               # Experimental outputs, logs, and CSV comparison tables
@@ -65,16 +89,6 @@ python main.py
 
 ---
 
-## Experimental Baselines Included
-The repository implements and benchmarks the following caching policies within the exact same sequence generator:
-1. **LRU** (Least Recently Used)
-2. **LFU** (Least Frequently Used)
-3. **ARC** (Adaptive Replacement Cache)
-4. **SLRU** (Segmented LRU)
-5. **DDQN** (Proposed Proactive Agent)
-
----
-
 ## Deployment and Resilience
 
 If running on a headless VPS (e.g., Ubuntu 24.04 Droplet), the script automatically uses the `Agg` matplotlib backend to save plots directly to the `results/` folder. The built-in `monitor_server.py` can be used to track system resource utilization (CPU, RAM, DB connection limits) during the simulation.
@@ -86,4 +100,8 @@ Due to the long-running nature of the training sweeps, the system automatically 
 
 ## License
 
-This code is released for academic review and reproducibility purposes. 
+This project is licensed under the **MIT License**.
+
+You are free to use, modify, and distribute the source code for both academic and commercial purposes, provided that proper credit is given to the original authors. 
+
+The datasets and transaction traces in the `data/` directory are provided for research purposes under the [Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)](https://creativecommons.org/licenses/by-nc/4.0/) license.
