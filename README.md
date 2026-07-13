@@ -1,5 +1,9 @@
 # Proactive Cache Optimization in Enterprise Systems Through Double Deep Reinforcement Learning
 
+![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
+![Conference](https://img.shields.io/badge/ICIMTech-2026-brightgreen.svg)
+
 This repository contains the source code, environment simulations, and experimental data for the paper **"Proactive Cache Optimization in Enterprise Systems Through Double Deep Reinforcement Learning"**, accepted at **ICIMTech 2026**.
 
 This repository is provided for **Data Availability** and reproducibility purposes.
@@ -30,9 +34,9 @@ The repository implements and benchmarks the following caching policies within t
 If you find this repository or our paper useful in your research, please consider citing our work:
 
 ```bibtex
-@inproceedings{tanuwijaya2026proactive,
+@inproceedings{tariono2026proactive,
   title={Proactive Cache Optimization in Enterprise Systems Through Double Deep Reinforcement Learning},
-  author={Tanuwijaya Tariono, Jason and Hartono, Deliko and Setiawan, Reina},
+  author={Tariono, Jason Tanuwijaya and Hartono, Deliko and Setiawan, Reina},
   booktitle={2026 International Conference on Information Management and Technology (ICIMTech)},
   year={2026},
   organization={IEEE}
@@ -105,3 +109,9 @@ This project is licensed under the **MIT License**.
 You are free to use, modify, and distribute the source code for both academic and commercial purposes, provided that proper credit is given to the original authors. 
 
 The datasets and transaction traces in the `data/` directory are provided for research purposes under the [Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)](https://creativecommons.org/licenses/by-nc/4.0/) license.
+
+---
+
+## Contact
+
+For any questions regarding the codebase, experiments, or data, please feel free to open an issue in this repository or contact [jason.tariono@binus.ac.id](mailto:jason.tariono@binus.ac.id).
