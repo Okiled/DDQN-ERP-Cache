@@ -6,7 +6,9 @@
 
 This repository contains the source code, environment simulations, and experimental data for the paper **"Proactive Cache Optimization in Enterprise Systems Through Double Deep Reinforcement Learning"**, accepted at **ICIMTech 2026**.
 
-This repository is provided for **Data Availability** and reproducibility purposes.
+> This repository is provided for **Data Availability** and reproducibility purposes.
+
+---
 
 ## Overview
 
@@ -14,18 +16,55 @@ Cloud-hosted Enterprise Resource Planning (ERP) systems running on multi-tenant 
 
 This project introduces a **proactive caching middleware** powered by a Double Deep Q-Network (DDQN). The agent observes an 18-dimensional state vector to predict and prefetch the next necessary entity types before the user requests them, while simultaneously handling cache evictions.
 
-### Experimental Baselines
+### Baselines
+
 The repository implements and benchmarks the following caching policies within the exact same sequence generator:
-1. **LRU** (Least Recently Used)
-2. **LFU** (Least Frequently Used)
-3. **ARC** (Adaptive Replacement Cache)
-4. **SLRU** (Segmented LRU)
-5. **DDQN** (Proposed Proactive Agent)
+
+| # | Policy | Type |
+|---|--------|------|
+| 1 | **LRU** — Least Recently Used | Reactive |
+| 2 | **LFU** — Least Frequently Used | Reactive |
+| 3 | **ARC** — Adaptive Replacement Cache | Reactive |
+| 4 | **SLRU** — Segmented LRU | Reactive |
+| 5 | **DDQN** *(Proposed)* | Proactive |
 
 ### Key Results
-- **93.30%** mean cache hit ratio across 20 random seeds on synthetic TPC-C supply-chain workloads.
-- **40.47% reduction** in mean analytical query latency compared to standard LRU.
-- Stable zero-shot deployment boundaries verified via an Odoo 14 real-world data set.
+
+| Metric | Value |
+|--------|-------|
+| Mean Cache Hit Ratio | **93.30%** across 20 random seeds |
+| Latency Reduction vs. LRU | **40.47%** reduction in mean analytical query latency |
+| Generalization | Zero-shot deployment verified on Odoo 14 real-world dataset |
+
+---
+
+## Results & Visualizations
+
+All figures and CSV outputs below are generated automatically and saved to the `results/` directory after a complete experimental run.
+
+### Cache Hit Ratio
+
+| Bar Chart | Boxplot |
+|:---------:|:-------:|
+| ![Hit Ratio Bar](results/hit_ratio_bar.png) | ![Hit Ratio Boxplot](results/hit_ratio_boxplot.png) |
+
+*Mean hit ratio per policy (bar); distribution across 20 seeds (boxplot).*
+
+### Latency & Convergence
+
+| Latency Comparison | Training Convergence |
+|:-----------------:|:-------------------:|
+| ![Latency Line](results/latency_line.png) | ![Convergence Curve](results/convergence_curve.png) |
+
+*Mean analytical query latency across policies (left); DDQN reward convergence over training episodes (right).*
+
+### Cache Pressure & Robustness
+
+| Cache Pressure | Robustness Heatmap |
+|:--------------:|:-----------------:|
+| ![Cache Pressure](results/cache_pressure.png) | ![Robustness Heatmap](results/robustness_heatmap.png) |
+
+*Cache pressure under increasing workload intensity (left); hyperparameter sensitivity sweep (right).*
 
 ---
 
@@ -48,28 +87,41 @@ If you find this repository or our paper useful in your research, please conside
 ## Repository Structure
 
 ```text
-├── data/                  # Transaction access traces and workload configurations
-├── models/                # Saved DDQN PyTorch model checkpoints (.pt)
-├── results/               # Experimental outputs, logs, and CSV comparison tables
-├── src/                   # Source code for the DDQN agent, environment, and baselines
-├── main.py                # Main execution script to run training & evaluations
-├── monitor_server.py      # Lightweight monitoring script for VPS deployments
-├── docker-compose.yml     # Docker configuration for Redis and PostgreSQL
-├── requirements.txt       # Python dependencies
-└── config.py              # Centralized hyperparameters and system configurations
+├── data/                        # Transaction access traces and workload configurations
+├── models/                      # Saved DDQN PyTorch model checkpoints (.pt)
+├── results/                     # Experimental outputs generated after a full run
+│   ├── architecture.txt         # DDQN model architecture summary
+│   ├── cache_pressure.csv       # Cache pressure raw data under load
+│   ├── cache_pressure.png       # Cache pressure plot
+│   ├── convergence_curve.png    # Training reward convergence plot
+│   ├── convergence_metrics.csv  # Per-episode convergence data
+│   ├── hit_ratio_bar.png        # Mean hit ratio bar chart
+│   ├── hit_ratio_boxplot.png    # Hit ratio distribution boxplot
+│   ├── latency_comparison.csv   # Per-policy latency raw data
+│   ├── latency_line.png         # Latency comparison line chart
+│   ├── metrics.csv              # Consolidated performance metrics per seed
+│   ├── overhead.csv             # DDQN inference overhead measurements
+│   ├── robustness_heatmap.png   # Hyperparameter sensitivity heatmap
+│   ├── robustness_sweep.csv     # Raw robustness sweep data
+│   └── sensitivity_lr.csv       # Learning rate sensitivity analysis
+├── src/                         # Source code for the DDQN agent, environment, and baselines
+├── main.py                      # Main execution script to run training & evaluations
+├── monitor_server.py            # Lightweight monitoring script for VPS deployments
+├── docker-compose.yml           # Docker configuration for Redis and PostgreSQL
+├── requirements.txt             # Python dependencies
+└── config.py                    # Centralized hyperparameters and system configurations
 ```
 
 ---
 
-## System Requirements
+## Requirements
 
-The simulation pipeline requires the following components:
 - **Python 3.10+**
-- **Docker & Docker Compose** (for running local Redis and PostgreSQL instances)
-- At least 2GB of free RAM and 1GB of disk space.
+- **Docker & Docker Compose** (for local Redis and PostgreSQL instances)
+- At least **2 GB RAM** and **1 GB disk space**
 
-### Dependencies
-Install the required Python packages:
+### Install Dependencies
+
 ```bash
 pip install -r requirements.txt
 ```
@@ -79,39 +131,50 @@ pip install -r requirements.txt
 ## Running the Experiments
 
 ### 1. Start the Environment Backends
-The environment simulates cache hits using Redis and cache misses using PostgreSQL. Start the containers using:
+
+The environment simulates cache hits via Redis and cache misses via PostgreSQL:
+
 ```bash
 docker-compose up -d
 ```
 
-### 2. Run the DDQN Agent
-The main driver script automates the preflight checks, initializes the MDP environment, trains the agent, and benchmarks it against the standard heuristics (LRU, LFU, ARC, SLRU).
+### 2. Run the Full Benchmark
+
 ```bash
 python main.py
 ```
-*Note: A complete run across 20 seeds may take several hours depending on CPU capabilities. The system features an automatic checkpointing mechanism in `results/checkpoint.json` so that progress is saved after every seed.*
+
+This will:
+- Run preflight checks and initialize the MDP environment
+- Train the DDQN agent across 20 random seeds
+- Benchmark against LRU, LFU, ARC, and SLRU
+- Save all results, plots, and CSV outputs to `results/`
+
+> **Note:** A complete 20-seed run may take several hours depending on your hardware. Progress is automatically saved to `results/checkpoint.json` — simply re-run `python main.py` to resume from the last completed seed.
 
 ---
 
-## Deployment and Resilience
+## Deployment & Resilience
 
-If running on a headless VPS (e.g., Ubuntu 24.04 Droplet), the script automatically uses the `Agg` matplotlib backend to save plots directly to the `results/` folder. The built-in `monitor_server.py` can be used to track system resource utilization (CPU, RAM, DB connection limits) during the simulation.
+Use `monitor_server.py` to track CPU, RAM, and DB connection utilization during long training runs:
 
-### Automatic Recovery
-Due to the long-running nature of the training sweeps, the system automatically writes to `results/checkpoint.json`. If the process is killed or the server restarts, simply re-run `python main.py` and the pipeline will skip already-completed seeds.
+```bash
+python monitor_server.py
+```
 
 ---
 
 ## License
 
-This project is licensed under the **MIT License**.
+The **source code** in this repository is licensed under the [MIT License](LICENSE).
 
-You are free to use, modify, and distribute the source code for both academic and commercial purposes, provided that proper credit is given to the original authors. 
-
-The datasets and transaction traces in the `data/` directory are provided for research purposes under the [Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)](https://creativecommons.org/licenses/by-nc/4.0/) license.
+The **datasets and transaction traces** in the `data/` directory are provided for research purposes under [CC BY-NC 4.0](https://creativecommons.org/licenses/by-nc/4.0/).
 
 ---
 
 ## Contact
 
-For any questions regarding the codebase, experiments, or data, please feel free to open an issue in this repository or contact [jason.tariono@binus.ac.id](mailto:jason.tariono@binus.ac.id).
+For questions regarding the codebase, experiments, or data, open an issue or reach out to any of the authors:
+
+- Jason Tanuwijaya Tariono — [jason.tariono@binus.ac.id](mailto:jason.tariono@binus.ac.id)
+- Deliko Hartono — [deliko.hartono@binus.ac.id](mailto:deliko.hartono@binus.ac.id)
